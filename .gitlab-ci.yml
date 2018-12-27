@@ -5,8 +5,7 @@ stages:
   - publish
 
 before_script:
-  script:
-    - "dotnet restore -s https://www.myget.org/F/dumpster-unicorn-fish/auth/$MYGET_API_KEY/api/v3/index.json -s https://api.nuget.org/v3/index.json"  
+  - "dotnet restore -s https://www.myget.org/F/dumpster-unicorn-fish/auth/$MYGET_API_KEY/api/v3/index.json -s https://api.nuget.org/v3/index.json"  
   
 build:
   stage: build
