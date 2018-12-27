@@ -13,5 +13,5 @@ build-identity:
 publish-domain:
   stage: publish
   script:
-    - "dotnet pack Moneteer.Identity.Domain\Moneteer.Identity.Domain.csproj --configuration Release --include-symbols
-    - "dotnet nuget push Moneteer.Identity.Domain\bin\Release\Moneteer.Identity.Domain.1.0.0.nupkg -k d0564ef2-02b0-4e74-9a71-bfb7cab5cdea -s https://www.myget.org/F/dumpster-unicorn-fish/api/v2/package
+    - "dotnet pack Moneteer.Identity.Domain\Moneteer.Identity.Domain.csproj --configuration Release --include-symbols"
+    - "dotnet nuget push Moneteer.Identity.Domain\bin\Release\Moneteer.Identity.Domain.1.0.0.nupkg -k d0564ef2-02b0-4e74-9a71-bfb7cab5cdea -s https://www.myget.org/F/dumpster-unicorn-fish/api/v2/package"
