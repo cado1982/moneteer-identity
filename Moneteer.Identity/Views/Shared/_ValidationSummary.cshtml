@@ -1,0 +1,6 @@
+@if (ViewContext.ModelState.IsValid == false)
+{
+    <div class="ui floating negative message">
+        <div asp-validation-summary="All"></div>
+    </div>
+}

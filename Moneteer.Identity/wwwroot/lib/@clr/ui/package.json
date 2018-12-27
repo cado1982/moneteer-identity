@@ -1,0 +1,48 @@
+{
+  "_from": "@clr/ui",
+  "_id": "@clr/ui@0.12.6",
+  "_inBundle": false,
+  "_integrity": "sha512-++HP3GZ4ooArswnZ+KcS6giw0SASYsYSgNFLlsbJ/KQGQSqSln57PQTGOi9St3Nl/fNMs2Crc1uE87785EKEMg==",
+  "_location": "/@clr/ui",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@clr/ui",
+    "name": "@clr/ui",
+    "escapedName": "@clr%2fui",
+    "scope": "@clr",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@clr/ui/-/ui-0.12.6.tgz",
+  "_shasum": "bb019268820e97e1c9334e4673ad45ebcd5e165c",
+  "_spec": "@clr/ui",
+  "_where": "D:\\git\\moneteer.net.core\\moneteer.identity",
+  "author": {
+    "name": "clarity"
+  },
+  "bugs": {
+    "url": "https://github.com/vmware/clarity/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "CSS for Clarity",
+  "homepage": "https://vmware.github.io/clarity/",
+  "license": "MIT",
+  "name": "@clr/ui",
+  "peerDependencies": {
+    "@clr/icons": "0.12.6",
+    "bootstrap": "4.0.0-alpha.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vmware/clarity.git"
+  },
+  "version": "0.12.6"
+}

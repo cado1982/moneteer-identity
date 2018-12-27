@@ -1,0 +1,27 @@
+﻿@model Moneteer.Identity.ViewModels.LoginWith2FAViewModel
+
+<div class="login-wrapper">
+    <form method="post" class="login" novalidate>
+        <section class="title">
+            <h5 class="hint">Enter the code from your authenticator app to log in.</h5>
+        </section>
+        <div class="login-group">
+            <input asp-for="RememberMe" type="hidden" />
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <input class="username" asp-for="TwoFactorCode" placeholder="Code" autofocus>
+            <div class="checkbox">
+                <input type="checkbox" id="rememberme">
+                <label for="rememberme">
+                    Remember me
+                </label>
+            </div>
+
+            <button id="submit" type="submit" class="btn btn-primary">LOGIN</button>
+
+            <span class="signup">
+                Don't have access to your authenticator? You can <a asp-action="LoginWithRecoveryCode">Login with a recovery code.</a>
+            </span>
+        </div>
+    </form>
+</div>

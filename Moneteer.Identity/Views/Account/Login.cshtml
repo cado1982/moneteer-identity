@@ -1,0 +1,48 @@
+﻿@model Moneteer.Identity.ViewModels.LoginViewModel
+
+<div class="login-wrapper">
+    <form asp-action="Login" method="post" class="login" novalidate>
+        <input type="hidden" asp-for="ReturnUrl" />
+        <section class="title">
+            <h3 class="welcome">Welcome to</h3>
+            Moneteer
+            <h5 class="hint">Login with an existing account or <a href="https://localhost:4500/identity/account/register">Register</a> to join us.</h5>
+        </section>
+        <div class="login-group">
+            <input class="username" asp-for="Email" placeholder="E-mail" autofocus>
+            <input class="password" asp-for="Password" placeholder="Password">
+            <div class="checkbox">
+                <input type="checkbox" id="rememberme">
+                <label for="rememberme">
+                    Remember me
+                </label>
+            </div>
+            @if (Model.Error != null)
+            {
+                <div class="error active">
+                    @Model.Error
+                </div>
+            }
+            @if (Model.ShouldConfirmEmail)
+            {
+                <div class="error active">
+                    You must confirm your email address before logging in.
+                    <a href="https://localhost:4500/account/resendsignuplink">Resend link</a>
+                </div>
+
+            }
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+
+            <button id="submit" type="submit" class="btn btn-primary">LOGIN</button>
+
+            <span class="signup">
+                New to us? <a class="signup" href="https://localhost:4500/identity/account/register">Register</a>
+            </span>
+            <span class="signup">
+                Forgot your password? <a href="https://localhost:4500/identity/account/forgotpassword">Reset</a>
+            </span>
+        </div>
+    </form>
+</div>

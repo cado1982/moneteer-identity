@@ -1,0 +1,18 @@
+﻿@model Moneteer.Identity.ViewModels.LoggedOutViewModel
+
+@{
+    // set this so the layout rendering sees an anonymous user
+    ViewData["signed-out"] = true;
+}
+
+<div class="logged-out_container">
+    <h1>
+        Logged out
+    </h1>
+    <div>
+        You are now logged out.
+    </div>
+    <div>
+        <a href="https://localhost:4500">Return to Moneteer</a>
+    </div>
+</div>
