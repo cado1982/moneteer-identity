@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Moneteer.Identity.Domain;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Moneteer.Identity.Domain
+namespace Moneteer.Identity.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
