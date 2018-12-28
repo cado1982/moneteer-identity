@@ -8,7 +8,7 @@ namespace Moneteer.Identity.Domain
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseSqlServer("data source=(localdb)\\MSSQLLocalDB;initial catalog=Moneteer;integrated security=SSPI");
+            optionsBuilder.UseNpgsql("Server=127.0.0.1;User Id=postgres;Password=admin;Enlist=true;Database=moneteer-identity;");
 
             return new ApplicationDbContext(optionsBuilder.Options);
         }

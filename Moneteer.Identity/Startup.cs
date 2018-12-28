@@ -31,7 +31,7 @@ namespace Moneteer.Identity
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
+                options.UseNpgsql(
                     Configuration.GetConnectionString("Identity"), x =>
                     {
                         x.MigrationsAssembly("Moneteer.Identity.Domain");
