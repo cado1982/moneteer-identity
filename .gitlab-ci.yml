@@ -2,19 +2,12 @@ image: microsoft/dotnet:latest
 
 stages:
   - build
-  - publish
 
 before_script:
-  - "dotnet restore -s https://www.myget.org/F/dumpster-unicorn-fish/auth/$MYGET_API_KEY/api/v3/index.json -s https://api.nuget.org/v3/index.json"  
+  - "dotnet restore -s https://api.nuget.org/v3/index.json"  
   
 build:
   stage: build
   script:
     - "cd Moneteer.Identity"
     - "dotnet build --no-restore"
-
-publish:
-  stage: publish
-  script:
-    - "dotnet pack Moneteer.Identity.Domain/Moneteer.Identity.Domain.csproj --configuration Release --include-symbols --no-restore"
-    - "dotnet nuget push Moneteer.Identity.Domain/bin/Release/Moneteer.Identity.Domain.1.0.0.nupkg -k $MYGET_API_KEY -s https://www.myget.org/F/dumpster-unicorn-fish/api/v2/package"
