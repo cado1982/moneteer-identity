@@ -33,4 +33,4 @@ release:
     - docker push $CONTAINER_RELEASE_IMAGE
     - docker push $HEROKU_RELEASE_IMAGE
   only:
-    - redesign
+    - master
