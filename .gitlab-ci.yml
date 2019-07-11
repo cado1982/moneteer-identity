@@ -1,13 +1,36 @@
-image: microsoft/dotnet:latest
+image: docker:latest
 
 stages:
   - build
+  - release
+
+services:
+  - docker:dind
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+  HEROKU_RELEASE_IMAGE: registry.heroku.com/moneteer-identity-staging/web
 
 before_script:
-  - "dotnet restore -s https://api.nuget.org/v3/index.json"  
-  
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
 build:
   stage: build
   script:
-    - "cd Moneteer.Identity"
-    - "dotnet build --no-restore"
+    - docker build --pull -t $CONTAINER_TEST_IMAGE Moneteer.Identity
+    - docker push $CONTAINER_TEST_IMAGE
+
+release:
+  variables:
+    CI_DEBUG_TRACE: "true"
+  stage: release
+  script:
+    - docker login --username=_ --password=$HEROKU_AUTH_KEY registry.heroku.com
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $HEROKU_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
+    - docker push $HEROKU_RELEASE_IMAGE
+  only:
+    - redesign
