@@ -15,4 +15,6 @@ RUN dotnet publish Moneteer.Identity/Moneteer.Identity.csproj -c Release -o /pub
 FROM microsoft/dotnet:2.1-aspnetcore-runtime
 WORKDIR /public
 COPY --from=build /publish .
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet Moneteer.Identity.dll
+ENV ASPNETCORE_URLS http://+:5000
+EXPOSE 5000
+ENTRYPOINT ["dotnet", "Moneteer.Identity.dll"]
