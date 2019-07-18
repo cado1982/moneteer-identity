@@ -69,8 +69,10 @@ namespace Moneteer.Identity
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
         {
+            dbContext.Database.Migrate();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
