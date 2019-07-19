@@ -45,7 +45,7 @@ namespace Moneteer.Identity
             {
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("https://localhost:4200").AllowAnyHeader().AllowAnyMethod();
+                    policy.WithOrigins(Configuration["CorsAllowedOrigins"]).AllowAnyHeader().AllowAnyMethod();
                 });
             });
 
