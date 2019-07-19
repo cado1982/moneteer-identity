@@ -8,29 +8,34 @@ services:
   - docker:dind
 
 variables:
-  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-  HEROKU_RELEASE_IMAGE: registry.heroku.com/moneteer-identity-staging/web
+  APP_IMAGE_NAME: 525140287988.dkr.ecr.eu-west-1.amazonaws.com/moneteer/identity/app
+  PROXY_IMAGE_NAME: 525140287988.dkr.ecr.eu-west-1.amazonaws.com/moneteer/identity/proxy
+  APP_TEST_IMAGE: $APP_IMAGE_NAME:$CI_COMMIT_REF_SLUG
+  PROXY_TEST_IMAGE: $PROXY_IMAGE_NAME:$CI_COMMIT_REF_SLUG
+  APP_RELEASE_IMAGE: $APP_IMAGE_NAME:latest
+  PROXY_RELEASE_IMAGE: $PROXY_IMAGE_NAME:latest
 
 before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  - apk add --no-cache curl jq python py-pip
+  - pip install awscli
+  - $(aws ecr get-login --no-include-email --region eu-west-1)
 
 build:
   stage: build
   script:
-    - docker build --pull -t $CONTAINER_TEST_IMAGE .
-    - docker push $CONTAINER_TEST_IMAGE
+    - docker build --pull -t $APP_TEST_IMAGE app/Moneteer.Identity
+    - docker build --pull -t $PROXY_TEST_IMAGE nginx
+    - docker push $APP_TEST_IMAGE
+    - docker push $PROXY_TEST_IMAGE
 
 release:
-  variables:
-    CI_DEBUG_TRACE: "true"
   stage: release
   script:
-    - docker login --username=_ --password=$HEROKU_AUTH_KEY registry.heroku.com
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $HEROKU_RELEASE_IMAGE
-    - docker push $CONTAINER_RELEASE_IMAGE
-    - docker push $HEROKU_RELEASE_IMAGE
+    - docker pull $APP_TEST_IMAGE
+    - docker pull $PROXY_TEST_IMAGE
+    - docker tag $APP_TEST_IMAGE $APP_RELEASE_IMAGE
+    - docker tag $PROXY_TEST_IMAGE $PROXY_RELEASE_IMAGE
+    - docker push $APP_RELEASE_IMAGE
+    - docker push $PROXY_RELEASE_IMAGE
   only:
     - master
