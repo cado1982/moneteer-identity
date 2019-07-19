@@ -9,7 +9,7 @@ RUN dotnet restore
 
 COPY . .
 
-RUN dotnet publish Moneteer.Identity/Moneteer.Identity.csproj -c Release -o /publish
+RUN dotnet publish Moneteer.Identity/Moneteer.Identity.csproj -c Release -o /publish --no-restore
 
 #Runtime Image Stage
 FROM microsoft/dotnet:2.1-aspnetcore-runtime

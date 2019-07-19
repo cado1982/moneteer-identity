@@ -1,0 +1,27 @@
+version: "3"
+services:
+  app:
+    image: "525140287988.dkr.ecr.eu-west-1.amazonaws.com/moneteer/identity/app:latest"
+    ports:
+      - "5000:5000"
+    environment:
+      - CorsAllowedOrigins=https://app.moneteer.com
+      - ASPNETCORE_ENVIRONMENT=Production
+    logging:
+      driver: "awslogs"
+      options:
+        awslogs-region: "eu-west-1"
+        awslogs-group: "moneteer-identity"
+        awslogs-stream-prefix: "app"
+  proxy:
+    image: "525140287988.dkr.ecr.eu-west-1.amazonaws.com/moneteer/identity/proxy:latest"
+    ports:
+      - "80:80"
+    logging:
+      driver: "awslogs"
+      options:
+        awslogs-region: "eu-west-1"
+        awslogs-group: "moneteer-identity"
+        awslogs-stream-prefix: "proxy"
+
+# ecs-cli compose -f docker-compose-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-identity-service/9703d51fdf93d81e --container-name proxy --container-port 80
