@@ -8,15 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moneteer.Identity.Domain;
+using Moneteer.Identity.Extensions;
 
 namespace Moneteer.Identity
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            Environment = hostingEnvironment;
         }
+
+        public IHostingEnvironment Environment { get; }
 
         public IConfiguration Configuration { get; }
 
@@ -58,9 +62,9 @@ namespace Moneteer.Identity
                 options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
-            
+
             services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()
+                    .LoadSigningCredential(Environment)
                     .AddInMemoryIdentityResources(Config.IdentityResources)
                     .AddInMemoryClients(Config.Clients)
                     .AddInMemoryApiResources(Config.Apis)
