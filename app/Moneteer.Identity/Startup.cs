@@ -34,12 +34,13 @@ namespace Moneteer.Identity
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            var identityConnectionString = Configuration.GetConnectionString("Identity");
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(
-                    Configuration.GetConnectionString("Identity"), x =>
-                    {
-                        x.MigrationsAssembly("Moneteer.Identity.Domain");
-                    }));
+                options.UseNpgsql(identityConnectionString, x =>
+                {
+                    x.MigrationsAssembly("Moneteer.Identity.Domain");
+                }));
             services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = true)
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -49,7 +50,9 @@ namespace Moneteer.Identity
             {
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins(Configuration["CorsAllowedOrigins"]).AllowAnyHeader().AllowAnyMethod();
+                    policy.WithOrigins(Configuration["AllowedCorsOrigins"])
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
                 });
             });
 
@@ -66,7 +69,7 @@ namespace Moneteer.Identity
             services.AddIdentityServer()
                     .LoadSigningCredential(Environment)
                     .AddInMemoryIdentityResources(Config.IdentityResources)
-                    .AddInMemoryClients(Config.Clients)
+                    .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                     .AddInMemoryApiResources(Config.Apis)
                     .AddAspNetIdentity<IdentityUser>();
 
@@ -88,7 +91,6 @@ namespace Moneteer.Identity
             }
 
             app.UseCors("default");
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseIdentityServer();
