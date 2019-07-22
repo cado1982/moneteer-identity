@@ -11,6 +11,10 @@ task_definition:
       secrets:
         - value_from: MoneteerIdentityConnectionString
           name: ConnectionStrings:Identity
+        - value_from: MoneteerIdentityTokenSigningCert
+          name: TokenSigningCert
+        - value_from: MoneteerIdentityTokenSigningCertSecret
+          name: TokenSigningCertSecret
     proxy:
       essential: true
 run_params:

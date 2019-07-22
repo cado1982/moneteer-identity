@@ -23,4 +23,8 @@ services:
         awslogs-group: "moneteer-identity"
         awslogs-stream-prefix: "proxy"
 
-# ecs-cli compose -f docker-compose-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-identity-service/9703d51fdf93d81e --container-name proxy --container-port 80
+# Store the cluster as an ecs-cli profile
+# ecs-cli configure --cluster moneteer-identity-cluster --region eu-west-1 --config-name moneteer-identity --default-launch-type FARGATE
+
+# Create the service using the prevoiusly created profile
+# ecs-cli compose --cluster-config moneteer-identity -f docker-compose-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-identity-service/18489a5836104311 --container-name proxy --container-port 80

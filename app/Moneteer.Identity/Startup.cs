@@ -67,7 +67,7 @@ namespace Moneteer.Identity
             });
 
             services.AddIdentityServer()
-                    .LoadSigningCredential(Environment)
+                    .LoadSigningCredential(Environment, Configuration)
                     .AddInMemoryIdentityResources(Config.IdentityResources)
                     .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                     .AddInMemoryApiResources(Config.Apis)
