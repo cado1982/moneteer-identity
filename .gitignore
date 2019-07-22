@@ -11,7 +11,8 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-
+app/Moneteer.Identity/wwwroot/lib/
+app/Moneteer.Identity/wwwroot/css/
 
 # Build results
 [Dd]ebug/
