@@ -94,8 +94,7 @@ namespace Moneteer.Identity
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseCors("default");
