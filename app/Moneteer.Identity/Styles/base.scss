@@ -1,0 +1,19 @@
+@import "colors.scss";
+
+.header-text-shadow {
+    text-shadow: 0 3px 6px $text-dark-shadow-color;
+}
+
+ul > li {
+    list-style-type: none;
+}
+
+ul {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+// .btn.btn-primary {
+//     color: $text-light-color;
+//     text-transform: uppercase;
+// } 

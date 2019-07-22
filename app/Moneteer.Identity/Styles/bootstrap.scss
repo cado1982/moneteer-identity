@@ -1,0 +1,29 @@
+@import "colors.scss";
+
+$font-family-sans-serif: "Montserrat", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+$body-bg: $body-color;
+$body-color: $text-dark-color;
+
+$primary: $brand-dark-color;
+
+// Variables must be above this and css below.
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+body > .container-fluid {
+    padding: 0;
+} 
+
+nav.bg-dark {
+    background-color: $brand-dark-color !important;
+}
+
+// .btn-primary {
+//     @include button-variant($brand-accent-color, darken($brand-accent-color, 7.5%), darken($brand-accent-color, 10%), lighten($brand-accent-color,5%), lighten($brand-accent-color, 10%), darken($brand-accent-color,30%));
+// }
+
+// .btn-outline-primary {
+//     @include button-outline-variant($brand-accent-color, #222222, lighten($brand-accent-color,5%), $brand-accent-color);
+// }
+
+
