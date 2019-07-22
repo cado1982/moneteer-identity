@@ -66,12 +66,20 @@ namespace Moneteer.Identity
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
-            services.AddIdentityServer()
-                    .LoadSigningCredential(Environment, Configuration)
-                    .AddInMemoryIdentityResources(Config.IdentityResources)
-                    .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
-                    .AddInMemoryApiResources(Config.Apis)
-                    .AddAspNetIdentity<IdentityUser>();
+            var publicOriginSetting = Configuration["PublicOrigin"];
+
+            services.AddIdentityServer(options =>
+            {
+                if (!string.IsNullOrEmpty(publicOriginSetting))
+                {
+                    options.PublicOrigin = publicOriginSetting;
+                }
+            })
+                .LoadSigningCredential(Environment, Configuration)
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
+                .AddInMemoryApiResources(Config.Apis)
+                .AddAspNetIdentity<IdentityUser>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

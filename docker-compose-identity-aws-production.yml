@@ -4,8 +4,6 @@ services:
     image: "525140287988.dkr.ecr.eu-west-1.amazonaws.com/moneteer/identity/app:latest"
     ports:
       - "5000:5000"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
     logging:
       driver: "awslogs"
       options:
@@ -23,8 +21,5 @@ services:
         awslogs-group: "moneteer-identity"
         awslogs-stream-prefix: "proxy"
 
-# Store the cluster as an ecs-cli profile
-# ecs-cli configure --cluster moneteer-identity-cluster --region eu-west-1 --config-name moneteer-identity --default-launch-type FARGATE
-
-# Create the service using the prevoiusly created profile
-# ecs-cli compose --cluster-config moneteer-identity -f docker-compose-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-identity-service/18489a5836104311 --container-name proxy --container-port 80
+# Create the service using the default cluster profile
+# ecs-cli compose -f docker-compose-identity-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-identity-service/18489a5836104311 --container-name proxy --container-port 80
