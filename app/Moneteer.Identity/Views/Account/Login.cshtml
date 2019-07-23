@@ -2,12 +2,6 @@
 @inject Moneteer.Identity.Helpers.IConfigurationHelper ConfigurationHelper
 
 <div class="container my-5">
-    <div class="row justify-content-center">
-        <a style="text-decoration: none;" href='@ConfigurationHelper.LandingUri'>
-            <h1 class="mb-4 text-primary font-weight-bolder">Moneteer</h1>
-        </a>
-    </div>
-     
     <form asp-action="Login" method="post" class="login" novalidate>
         <div class="row">
             <input type="hidden" asp-for="ReturnUrl" />
@@ -50,8 +44,8 @@
                 <div class="card-footer">
                     <div class="container-fluid">
                         <div class="row align-items-center">
-                            <a class="col-md-6 p-0 mb-2 mb-md-0" href='@string.Format("{0}/identity/account/forgotpassword", ConfigurationHelper.LandingUri)'>Forgot your password?</a>
-                            <button type="submit" class="col-md-6 btn btn-primary">Login</button>        
+                            <button type="submit" class="col-md-6 btn btn-primary">Login</button>  
+                            <a class="btn btn-link col-md-6 p-0 my-2 my-md-0" href='@string.Format("{0}/identity/account/forgotpassword", ConfigurationHelper.LandingUri)'>Forgot your password?</a>
                         </div>
                     </div>
                     

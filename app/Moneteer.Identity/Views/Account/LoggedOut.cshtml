@@ -1,18 +1,21 @@
 ﻿@model Moneteer.Identity.ViewModels.LoggedOutViewModel
-
+@inject Moneteer.Identity.Helpers.IConfigurationHelper ConfigurationHelper
 @{
     // set this so the layout rendering sees an anonymous user
     ViewData["signed-out"] = true;
 }
 
-<div class="logged-out_container">
-    <h1>
-        Logged out
-    </h1>
-    <div>
-        You are now logged out.
+<div class="container my-5">
+    <div class="row">
+        <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
+            <h5 class="card-header">Logged Out</h5>
+            <div class="card-body">
+                You are now logged out.
+            </div>
+        </div>
     </div>
-    <div>
-        <a href="https://localhost:4500">Return to Moneteer</a>
+
+    <div class="m-5 text-center">
+        <div><a href='@ConfigurationHelper.LandingUri'>Return to Moneteer</a></div>
     </div>
 </div>

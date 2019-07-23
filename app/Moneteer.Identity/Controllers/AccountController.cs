@@ -15,6 +15,7 @@ using IdentityServer4;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using Moneteer.Identity.Helpers;
 
 namespace Moneteer.Identity.Controllers
 {
@@ -28,6 +29,7 @@ namespace Moneteer.Identity.Controllers
         private readonly IEventService _eventService;
         private readonly IPersistedGrantService _persistedGrantService;
         private readonly ILogger<AccountController> _logger;
+        private readonly IConfigurationHelper _configurationHelper;
 
         public AccountController(
             IIdentityServerInteractionService interactionService,
@@ -37,7 +39,8 @@ namespace Moneteer.Identity.Controllers
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IEventService eventService,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IConfigurationHelper configurationHelper)
         {
             _interactionService = interactionService;
             _authenticationSchemeProvider = authenticationSchemeProvider;
@@ -47,6 +50,7 @@ namespace Moneteer.Identity.Controllers
             _eventService = eventService;
             _persistedGrantService = persistedGrantService;
             _logger = logger;
+            _configurationHelper = configurationHelper;
         }
 
         [HttpGet]
@@ -79,7 +83,7 @@ namespace Moneteer.Identity.Controllers
                         return Redirect(returnUrl);
                     }
 
-                    return Redirect("/");
+                    return Redirect(_configurationHelper.LandingUri);
                 }
                 else if (result.IsLockedOut)
                 {
@@ -140,7 +144,7 @@ namespace Moneteer.Identity.Controllers
             }
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync().ConfigureAwait(false);
-            if (user == null)
+            if (user == null || model.TwoFactorCode == null)
             {
                 // This can happen if the user stays on the LoginWith2FA for a while and then tries to submit
                 ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
