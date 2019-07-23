@@ -1,9 +1,9 @@
 ﻿@model Moneteer.Identity.ViewModels.LoginViewModel
-@inject IConfigurationHelper ConfigurationHelper
+@inject Moneteer.Identity.Helpers.IConfigurationHelper ConfigurationHelper
 
 <div class="container my-5">
     <div class="row justify-content-center">
-        <a style="text-decoration: none;" href='@ConfigurationHelper.LandingPageUri'>
+        <a style="text-decoration: none;" href='@ConfigurationHelper.LandingUri'>
             <h1 class="mb-4 text-primary font-weight-bolder">Moneteer</h1>
         </a>
     </div>
@@ -37,20 +37,20 @@
                             @Model.Error
                         </div>
                     }
-                    @if (Model.ShouldConfirmEmail)
+                    @*@if (Model.ShouldConfirmEmail)
                     {
                         <div class="error active">
                             You must confirm your email address before logging in.
-                            <a href='@string.Format("{0}/account/resendsignuplink", ConfigurationHelper.LandingPageUri)'>Resend link</a>
+                            <a href='@string.Format("{0}/account/resendsignuplink", ConfigurationHelper.LandingUri)'>Resend link</a>
                         </div>
 
-                    }
+                    }*@
                 </div>
 
                 <div class="card-footer">
                     <div class="container-fluid">
                         <div class="row align-items-center">
-                            <a class="col-md-6 p-0 mb-2 mb-md-0" href='@string.Format("{0}/account/forgotpassword", ConfigurationHelper.LandingPageUri)'>Forgot your password?</a>
+                            <a class="col-md-6 p-0 mb-2 mb-md-0" href='@string.Format("{0}/identity/account/forgotpassword", ConfigurationHelper.LandingUri)'>Forgot your password?</a>
                             <button type="submit" class="col-md-6 btn btn-primary">Login</button>        
                         </div>
                     </div>
@@ -62,7 +62,7 @@
 
     <div class="m-5 text-center">
         <div>Don't have an account yet?</div>
-        <div><a href='@string.Format("{0}/account/register", ConfigurationHelper.LandingPageUri)'>Get Started</a></div>
+        <div><a href='@string.Format("{0}/identity/account/register", ConfigurationHelper.LandingUri)'>Get Started</a></div>
     </div>
 </div>
 

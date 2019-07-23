@@ -1,21 +1,24 @@
 using Microsoft.Extensions.Configuration;
 
-public class ConfigurationHelper : IConfigurationHelper
+namespace Moneteer.Identity.Helpers
 {
-    private readonly IConfiguration _configuration;
-
-    public ConfigurationHelper(IConfiguration configuration)
+    public class ConfigurationHelper : IConfigurationHelper
     {
-        _configuration = configuration;
-    }
+        private readonly IConfiguration _configuration;
 
-    public string LandingPageUri
-    {
-        get { return _configuration["LandingPageUri"]; }
-    }
+        public ConfigurationHelper(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
-    public string AppUri
-    {
-        get { return _configuration["AppUri"]; }
+        public string LandingUri
+        {
+            get { return _configuration["LandingUri"]; }
+        }
+
+        public string AppUri
+        {
+            get { return _configuration["AppUri"]; }
+        }
     }
 }

@@ -1,5 +1,8 @@
-public interface IConfigurationHelper 
+namespace Moneteer.Identity.Helpers
 {
-    string LandingPageUri { get; }
-    string AppUri { get; }
+    public interface IConfigurationHelper
+    {
+        string LandingUri { get; }
+        string AppUri { get; }
+    }
 }

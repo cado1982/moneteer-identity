@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moneteer.Identity.Domain;
 using Moneteer.Identity.Extensions;
+using Moneteer.Identity.Helpers;
 
 namespace Moneteer.Identity
 {
