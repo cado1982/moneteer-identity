@@ -82,6 +82,8 @@ namespace Moneteer.Identity
                 .AddAspNetIdentity<IdentityUser>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSingleton<IConfigurationHelper, ConfigurationHelper>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)

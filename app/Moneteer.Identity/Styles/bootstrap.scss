@@ -18,6 +18,11 @@ nav.bg-dark {
     background-color: $brand-dark-color !important;
 }
 
+h1 {
+    font-size: 3em; 
+    text-decoration: none;
+}
+
 // .btn-primary {
 //     @include button-variant($brand-accent-color, darken($brand-accent-color, 7.5%), darken($brand-accent-color, 10%), lighten($brand-accent-color,5%), lighten($brand-accent-color, 10%), darken($brand-accent-color,30%));
 // }
