@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,8 +31,8 @@ namespace Moneteer.Identity
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                // This is disabled because it's only used on the landing page
+                options.CheckConsentNeeded = context => false;
             });
 
             var identityConnectionString = Configuration.GetConnectionString("Identity");
@@ -84,12 +84,18 @@ namespace Moneteer.Identity
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.All;
+            });
+
             services.AddSingleton<IConfigurationHelper, ConfigurationHelper>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
         {
             dbContext.Database.Migrate();
+            app.UseForwardedHeaders();
 
             if (env.IsDevelopment())
             {
