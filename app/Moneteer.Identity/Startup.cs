@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -95,6 +96,7 @@ namespace Moneteer.Identity
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
         {
             dbContext.Database.Migrate();
+            
             app.UseForwardedHeaders();
 
             if (env.IsDevelopment())
