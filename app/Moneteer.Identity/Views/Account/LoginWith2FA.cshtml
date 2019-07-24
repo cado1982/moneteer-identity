@@ -9,7 +9,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label asp-for="TwoFactorCode">Code</label>
-                        <input asp-for="TwoFactorCode" class="form-control form-control-lg" placeholder="Enter code" autofocus />
+                        <input asp-for="TwoFactorCode" class="form-control form-control-lg" placeholder="Enter authenticator code" autofocus />
                         <small class="form-text text-muted">Enter the security code from your authenticator app.</small>
                         <span asp-validation-for="TwoFactorCode" class="text-danger"></span>
                     </div>
@@ -25,7 +25,6 @@
 
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Login</button> 
-                    <button type="submit" class="btn btn-link">Login</button> 
                 </div>
             </div>
         </div>
