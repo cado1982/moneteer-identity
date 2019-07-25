@@ -14,19 +14,6 @@ namespace Moneteer.Identity
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .ConfigureLogging((hostingContext, logging) =>
-                {
-                    logging.AddAWSProvider();
-
-                    if (hostingContext.HostingEnvironment.IsDevelopment())
-                    {
-                        logging.SetMinimumLevel(LogLevel.Debug);
-                    } 
-                    else 
-                    {
-                        logging.SetMinimumLevel(LogLevel.Information);
-                    }
-                })
                 .UseStartup<Startup>();
         }
     }
