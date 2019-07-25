@@ -17,6 +17,7 @@ namespace Moneteer.Identity
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddAWSProvider();
                 })
                 .UseStartup<Startup>();
         }
