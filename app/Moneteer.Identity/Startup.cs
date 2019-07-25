@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moneteer.Identity.Domain;
-using Moneteer.Identity.Extensions;
 using Moneteer.Identity.Helpers;
 
 namespace Moneteer.Identity
@@ -47,6 +48,13 @@ namespace Moneteer.Identity
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            var dataProtectionBuilder = services.AddDataProtection()
+                .SetApplicationName("Moneteer-Identity");
+
+            if (!Environment.IsDevelopment()) {
+                dataProtectionBuilder.ProtectKeysWithCertificate(GetSigningCertificate());
+            }
+
             services.AddAntiforgery();
             services.AddCors(options =>
             {
@@ -70,18 +78,25 @@ namespace Moneteer.Identity
 
             var publicOriginSetting = Configuration["PublicOrigin"];
 
-            services.AddIdentityServer(options =>
+            var identityBuilder = services.AddIdentityServer(options =>
             {
                 if (!string.IsNullOrEmpty(publicOriginSetting))
                 {
                     options.PublicOrigin = publicOriginSetting;
                 }
             })
-                .LoadSigningCredential(Environment, Configuration)
                 .AddInMemoryIdentityResources(Config.IdentityResources)
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddInMemoryApiResources(Config.Apis)
                 .AddAspNetIdentity<IdentityUser>();
+
+            if (Environment.IsDevelopment()) 
+            {
+                identityBuilder.AddDeveloperSigningCredential();
+            } else 
+            {
+                identityBuilder.AddSigningCredential(GetSigningCertificate());
+            }
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -117,6 +132,15 @@ namespace Moneteer.Identity
             app.UseIdentityServer();
 
             app.UseMvcWithDefaultRoute();
+        }
+
+        private X509Certificate2 GetSigningCertificate()
+        {
+            var cert = Configuration["TokenSigningCert"];
+            var secret = Configuration["TokenSigningCertSecret"];
+                
+            byte[] decodedPfxBytes = Convert.FromBase64String(cert);
+            return new X509Certificate2(decodedPfxBytes, secret);
         }
     }
 }
