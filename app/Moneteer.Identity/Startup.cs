@@ -48,13 +48,13 @@ namespace Moneteer.Identity
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            var dataProtectionBuilder = services.AddDataProtection()
-                .SetApplicationName("Moneteer-Identity");
+            var dataProtectionBuilder = services.AddDataProtection();
 
-            if (!Environment.IsDevelopment()) {
-                dataProtectionBuilder.ProtectKeysWithCertificate(GetSigningCertificate());
+            if (!Environment.IsDevelopment())
+            {
+                dataProtectionBuilder.PersistKeysToAWSSystemsManager("/Moneteer/DataProtection");
             }
-
+                
             services.AddAntiforgery();
             services.AddCors(options =>
             {
