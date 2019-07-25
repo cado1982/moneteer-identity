@@ -15,11 +15,16 @@ COPY Moneteer.Identity/Moneteer.Identity.csproj ./Moneteer.Identity/
 COPY Moneteer.Identity.Domain/Moneteer.Identity.Domain.csproj ./Moneteer.Identity.Domain/
 RUN dotnet restore
 
-COPY . .
-
 WORKDIR /app/Moneteer.Identity
+COPY Moneteer.Identity/package.json .
 RUN npm install
+
+COPY Moneteer.Identity/Styles Styles/
+COPY Moneteer.Identity/gulpfile.js .
 RUN npm run gulp-build
+
+WORKDIR /app
+COPY . .
 
 RUN dotnet publish -c Release -o /publish --no-restore
 
