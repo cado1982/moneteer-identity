@@ -48,7 +48,7 @@ namespace Moneteer.Identity
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            var dataProtectionBuilder = services.AddDataProtection();
+            var dataProtectionBuilder = services.AddDataProtection().SetApplicationName("moneteer-identity");
 
             if (!Environment.IsDevelopment())
             {
