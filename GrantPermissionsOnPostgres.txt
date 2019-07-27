@@ -1,0 +1,5 @@
+GRANT CONNECT ON DATABASE moneteer_identity_server TO svc_identity;
+GRANT USAGE ON SCHEMA public TO svc_identity;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO svc_identity;
+
+

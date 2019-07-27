@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/app/Moneteer.Identity/bin/Debug/netcoreapp2.1/Moneteer.Identity.dll",
+            "program": "${workspaceFolder}/app/Moneteer.Identity/bin/Debug/netcoreapp2.2/Moneteer.Identity.dll",
             "args": [],
             "cwd": "${workspaceFolder}/app/Moneteer.Identity",
             "stopAtEntry": false,

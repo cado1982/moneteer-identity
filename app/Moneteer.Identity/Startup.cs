@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moneteer.Identity.Domain;
 using Moneteer.Identity.Helpers;
+using Moneteer.Identity.Repositories;
 
 namespace Moneteer.Identity
 {
@@ -39,6 +41,7 @@ namespace Moneteer.Identity
 
             var identityConnectionString = Configuration.GetConnectionString("Identity");
 
+            services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DataProtection")));
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(identityConnectionString, x =>
                 {
@@ -48,11 +51,17 @@ namespace Moneteer.Identity
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            var dataProtectionBuilder = services.AddDataProtection().SetApplicationName("moneteer-identity");
-
-            if (!Environment.IsDevelopment())
+            // Data Protection - Provides storage and encryption for anti-forgery tokens
+            if (Environment.IsDevelopment())
             {
-                dataProtectionBuilder.PersistKeysToAWSSystemsManager("/Moneteer/DataProtection");
+                services.AddDataProtection()
+                        .PersistKeysToDbContext<DataProtectionKeysContext>();
+            }
+            else 
+            {
+                services.AddDataProtection()
+                        .PersistKeysToDbContext<DataProtectionKeysContext>()
+                        .ProtectKeysWithCertificate(GetSigningCertificate());
             }
                 
             services.AddAntiforgery();
@@ -85,6 +94,14 @@ namespace Moneteer.Identity
                     options.PublicOrigin = publicOriginSetting;
                 }
             })
+                .AddOperationalStore(options => 
+                {
+                    options.ConfigureDbContext = b =>
+                                b.UseNpgsql(Configuration.GetConnectionString("IdentityServer"),
+                                    sql =>  sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
+                                    
+                    options.EnableTokenCleanup = true;
+                })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddInMemoryApiResources(Config.Apis)
@@ -98,7 +115,7 @@ namespace Moneteer.Identity
                 identityBuilder.AddSigningCredential(GetSigningCertificate());
             }
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {

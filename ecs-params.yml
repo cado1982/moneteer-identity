@@ -11,6 +11,8 @@ task_definition:
       secrets:
         - value_from: MoneteerIdentityConnectionString
           name: ConnectionStrings:Identity
+        - value_from: MoneteerDataProtectionConnectionString
+          name: ConnectionStrings:DataProtection
         - value_from: MoneteerIdentityTokenSigningCert
           name: TokenSigningCert
         - value_from: MoneteerIdentityTokenSigningCertSecret
