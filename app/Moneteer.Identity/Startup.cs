@@ -102,9 +102,9 @@ namespace Moneteer.Identity
 
                     options.EnableTokenCleanup = true;
                 })
-                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
-                .AddInMemoryApiResources(Config.Apis)
+                .AddInMemoryApiResources(IdentityConfig.GetApiResources(Configuration))
                 .AddAspNetIdentity<IdentityUser>();
 
             if (Environment.IsDevelopment()) 

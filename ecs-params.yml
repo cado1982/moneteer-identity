@@ -19,6 +19,8 @@ task_definition:
           name: TokenSigningCert
         - value_from: MoneteerIdentityTokenSigningCertSecret
           name: TokenSigningCertSecret
+        - value_from: /Moneteer/Identity/ApiSecret
+          name: ApiSecret
     proxy:
       essential: true
 run_params:
