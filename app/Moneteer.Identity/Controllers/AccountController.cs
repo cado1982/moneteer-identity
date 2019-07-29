@@ -221,6 +221,7 @@ namespace Moneteer.Identity.Controllers
         {
             var vm = await BuildLoginViewModelAsync(model.ReturnUrl);
             vm.Email = model.Email;
+            vm.ShouldConfirmEmail = model.ShouldConfirmEmail;
             return vm;
         }
 
