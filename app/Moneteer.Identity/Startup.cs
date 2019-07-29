@@ -99,7 +99,7 @@ namespace Moneteer.Identity
                     options.ConfigureDbContext = b =>
                                 b.UseNpgsql(Configuration.GetConnectionString("IdentityServer"),
                                     sql =>  sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
-                                    
+
                     options.EnableTokenCleanup = true;
                 })
                 .AddInMemoryIdentityResources(Config.IdentityResources)
@@ -115,7 +115,10 @@ namespace Moneteer.Identity
                 identityBuilder.AddSigningCredential(GetSigningCertificate());
             }
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options => 
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
