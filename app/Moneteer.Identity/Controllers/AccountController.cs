@@ -319,18 +319,6 @@ namespace Moneteer.Identity.Controllers
             };
         }
 
-        // private IActionResult RedirectToLocal(string returnUrl)
-        // {
-        //     if (Url.IsLocalUrl(returnUrl))
-        //     {
-        //         return Redirect(returnUrl);
-        //     }
-        //     else
-        //     {
-        //         return RedirectToAction(nameof(AccountController.Login), "Home");
-        //     }
-        // }
-
         private RedirectResult RedirectToReturnUrl(string returnUrl)
         {
             if (_interactionService.IsValidReturnUrl(returnUrl))
