@@ -8,6 +8,7 @@ namespace Moneteer.Identity.ViewModels
         [DataType(DataType.Text)]
         [Display(Name = "Recovery Code")]
         public string RecoveryCode { get; set; }
+        public string ReturnUrl { get; set; }
         public bool RememberMe { get; set; }
     }
 }

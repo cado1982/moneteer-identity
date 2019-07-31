@@ -15,6 +15,7 @@ namespace Moneteer.Identity.ViewModels
         [Required(AllowEmptyStrings = false, ErrorMessage ="You must enter your password")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        public bool RememberMe { get; set; }
         public string ReturnUrl { get; set; }
         public string Error { get; set; }
 

@@ -65,10 +65,6 @@ namespace Moneteer.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var returnUrl = model.ReturnUrl;
-
-            ViewData["ReturnUrl"] = returnUrl;
-
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
@@ -78,12 +74,7 @@ namespace Moneteer.Identity.Controllers
 
                     await _eventService.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName));
 
-                    if (_interactionService.IsValidReturnUrl(returnUrl))
-                    {
-                        return Redirect(returnUrl);
-                    }
-
-                    return Redirect(_configurationHelper.LandingUri);
+                    return RedirectToReturnUrl(model.ReturnUrl);
                 }
                 else if (result.IsLockedOut)
                 {
@@ -91,7 +82,7 @@ namespace Moneteer.Identity.Controllers
                 }
                 else if (result.RequiresTwoFactor)
                 {
-                    return RedirectToAction(nameof(LoginWith2FA), new { returnUrl, RememberMe = true });
+                    return RedirectToAction(nameof(LoginWith2FA), new { rememberMe = model.RememberMe, returnUrl = model.ReturnUrl});
                 }
                 else
                 {
@@ -118,7 +109,7 @@ namespace Moneteer.Identity.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> LoginWith2FA(bool rememberMe, string returnUrl = null)
+        public async Task<IActionResult> LoginWith2FA(string returnUrl, bool rememberMe)
         {
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync().ConfigureAwait(false);
 
@@ -127,8 +118,9 @@ namespace Moneteer.Identity.Controllers
                 throw new ApplicationException($"Unable to load two-factor authentication user.");
             }
 
-            var model = new LoginWith2FAViewModel { RememberMe = rememberMe };
-            ViewData["ReturnUrl"] = returnUrl;
+            var model = new LoginWith2FAViewModel();
+            model.ReturnUrl = returnUrl;
+            model.RememberMe = rememberMe;
 
             return View(model);
         }
@@ -136,7 +128,7 @@ namespace Moneteer.Identity.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginWith2FA(LoginWith2FAViewModel model, bool rememberMe, string returnUrl = null)
+        public async Task<IActionResult> LoginWith2FA(LoginWith2FAViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -153,12 +145,12 @@ namespace Moneteer.Identity.Controllers
 
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
+            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, model.RememberMe, model.RememberMachine);
 
             if (result.Succeeded)
             {
                 _logger.LogInformation("User with ID {UserId} logged in with 2fa.", user.Id);
-                return RedirectToLocal(returnUrl);
+                return RedirectToReturnUrl(model.ReturnUrl);
             }
             else if (result.IsLockedOut)
             {
@@ -175,7 +167,7 @@ namespace Moneteer.Identity.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> LoginWithRecoveryCode(bool rememberMe)
+        public async Task<IActionResult> LoginWithRecoveryCode()
         {
             // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
@@ -184,7 +176,7 @@ namespace Moneteer.Identity.Controllers
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             }
 
-            var model = new LoginWithRecoveryCodeModel{ RememberMe = rememberMe };
+            var model = new LoginWithRecoveryCodeModel();
 
             return View(model);
         }
@@ -208,11 +200,11 @@ namespace Moneteer.Identity.Controllers
             var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
 
             var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
-                
+
             if (result.Succeeded)
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with a recovery code.", user.Id);
-                return Redirect(_configurationHelper.LandingUri);
+                return RedirectToReturnUrl(model.ReturnUrl);
             }
             if (result.IsLockedOut)
             {
@@ -226,7 +218,7 @@ namespace Moneteer.Identity.Controllers
                 return View();
             }
         }
- 
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Lockout()
@@ -253,7 +245,7 @@ namespace Moneteer.Identity.Controllers
                 SignOutIframeUrl = logout?.SignOutIFrameUrl,
                 LogoutId = model.LogoutId
             };
-            
+
             if (User?.Identity.IsAuthenticated == true)
             {
                 await _signInManager.SignOutAsync();
@@ -322,22 +314,31 @@ namespace Moneteer.Identity.Controllers
             return new LoginViewModel
             {
                 EnableLocalLogin = true,
-                ReturnUrl = returnUrl,
                 Email = context?.LoginHint,
                 ExternalProviders = providers.ToArray()
             };
         }
 
-        private IActionResult RedirectToLocal(string returnUrl)
+        // private IActionResult RedirectToLocal(string returnUrl)
+        // {
+        //     if (Url.IsLocalUrl(returnUrl))
+        //     {
+        //         return Redirect(returnUrl);
+        //     }
+        //     else
+        //     {
+        //         return RedirectToAction(nameof(AccountController.Login), "Home");
+        //     }
+        // }
+
+        private RedirectResult RedirectToReturnUrl(string returnUrl)
         {
-            if (Url.IsLocalUrl(returnUrl))
+            if (_interactionService.IsValidReturnUrl(returnUrl))
             {
                 return Redirect(returnUrl);
             }
-            else
-            {
-                return RedirectToAction(nameof(AccountController.Login), "Home");
-            }
+
+            return Redirect(_configurationHelper.LandingUri);
         }
     }
 }

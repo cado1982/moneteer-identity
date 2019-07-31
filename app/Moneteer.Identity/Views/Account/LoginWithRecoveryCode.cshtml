@@ -7,7 +7,8 @@
 <div class="container my-5">
     <form asp-action="LoginWithRecoveryCode" method="post" novalidate>
         <div class="row">
-            <input asp-for="RememberMe" type="hidden" />
+            <input type="hidden" asp-for="ReturnUrl" />
+            <input type="hidden" asp-for="RememberMe" />
             <div class="card shadow-lg rounded col-md-8 col-lg-6 offset-md-2 offset-lg-3 p-0">
                 <h5 class="card-header">Login</h5>
                 <div class="card-body">
