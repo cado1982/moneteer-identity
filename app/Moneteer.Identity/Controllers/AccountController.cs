@@ -9,13 +9,11 @@ using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using IdentityServer4.Events;
-using IdentityModel;
 using IdentityServer4.Extensions;
-using IdentityServer4;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Moneteer.Identity.Helpers;
+using Moneteer.Identity.Domain.Entities;
 
 namespace Moneteer.Identity.Controllers
 {
@@ -24,8 +22,8 @@ namespace Moneteer.Identity.Controllers
         private readonly IIdentityServerInteractionService _interactionService;
         private readonly IAuthenticationSchemeProvider _authenticationSchemeProvider;
         private readonly IClientStore _clientStore;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IEventService _eventService;
         private readonly IPersistedGrantService _persistedGrantService;
         private readonly ILogger<AccountController> _logger;
@@ -36,8 +34,8 @@ namespace Moneteer.Identity.Controllers
             IAuthenticationSchemeProvider authenticationSchemeProvider,
             IPersistedGrantService persistedGrantService,
             IClientStore clientStore,
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IEventService eventService,
             ILogger<AccountController> logger,
             IConfigurationHelper configurationHelper)
@@ -72,7 +70,7 @@ namespace Moneteer.Identity.Controllers
                 {
                     var user = await _userManager.FindByEmailAsync(model.Email);
 
-                    await _eventService.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName));
+                    await _eventService.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id.ToString(), user.UserName));
 
                     return RedirectToReturnUrl(model.ReturnUrl);
                 }
@@ -144,7 +142,7 @@ namespace Moneteer.Identity.Controllers
             }
 
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
-
+            //var token = await _userManager.GetAuthenticatorKeyAsync(user);
             var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, model.RememberMe, model.RememberMachine);
 
             if (result.Succeeded)

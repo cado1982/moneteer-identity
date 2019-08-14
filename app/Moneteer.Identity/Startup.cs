@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using IdentityServer4.EntityFramework.Interfaces;
+using IdentityServer4.EntityFramework.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moneteer.Identity.Domain;
+using Moneteer.Identity.Domain.Entities;
 using Moneteer.Identity.Helpers;
 using Moneteer.Identity.Repositories;
 
@@ -39,17 +43,14 @@ namespace Moneteer.Identity
                 options.CheckConsentNeeded = context => false;
             });
 
-            var identityConnectionString = Configuration.GetConnectionString("Identity");
+            var moneteerConnectionString = Configuration.GetConnectionString("Moneteer");
 
-            services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DataProtection")));
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseNpgsql(identityConnectionString, x =>
-                {
-                    x.MigrationsAssembly("Moneteer.Identity.Domain");
-                }));
-            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedEmail = true)
+            services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(moneteerConnectionString));
+            services.AddDbContext<Domain.IdentityDbContext>(options => options.UseNpgsql(moneteerConnectionString));
+            services.AddTransient<PersistedGrantContext>();
+            services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedEmail = true)
                     .AddDefaultTokenProviders()
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
+                    .AddEntityFrameworkStores<Domain.IdentityDbContext>();
 
             // Data Protection - Provides storage and encryption for anti-forgery tokens
             if (Environment.IsDevelopment())
@@ -63,7 +64,7 @@ namespace Moneteer.Identity
                         .PersistKeysToDbContext<DataProtectionKeysContext>()
                         .ProtectKeysWithCertificate(GetSigningCertificate());
             }
-                
+
             services.AddAntiforgery();
             services.AddCors(options =>
             {
@@ -96,16 +97,17 @@ namespace Moneteer.Identity
             })
                 .AddOperationalStore(options => 
                 {
-                    options.ConfigureDbContext = b =>
-                                b.UseNpgsql(Configuration.GetConnectionString("IdentityServer"),
-                                    sql =>  sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
-
+                    options.ConfigureDbContext = b => {
+                        b.UseNpgsql(moneteerConnectionString);
+                        //b.EnableSensitiveDataLogging();
+                    };
                     options.EnableTokenCleanup = true;
                 })
                 .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddInMemoryApiResources(IdentityConfig.GetApiResources(Configuration))
-                .AddAspNetIdentity<IdentityUser>();
+                .AddPersistedGrantStore<CustomPersistedGrantStore>()
+                .AddAspNetIdentity<User>();
 
             if (Environment.IsDevelopment()) 
             {
@@ -130,10 +132,8 @@ namespace Moneteer.Identity
             services.AddSingleton<IConfigurationHelper, ConfigurationHelper>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            dbContext.Database.Migrate();
-            
             app.UseForwardedHeaders();
 
             if (env.IsDevelopment())

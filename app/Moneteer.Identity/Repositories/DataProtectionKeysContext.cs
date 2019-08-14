@@ -5,17 +5,17 @@ namespace Moneteer.Identity.Repositories
 {
     public class DataProtectionKeysContext : DbContext, IDataProtectionKeyContext
     {
-        // A recommended constructor overload when using EF Core 
-        // with dependency injection.
         public DataProtectionKeysContext(DbContextOptions<DataProtectionKeysContext> options) 
             : base(options) { }
 
-        public DataProtectionKeysContext()
-        { 
-            
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<DataProtectionKey>().ToTable("keys", "data_protection");
+            builder.Entity<DataProtectionKey>().Property(p => p.Id).HasColumnName("id");
+            builder.Entity<DataProtectionKey>().Property(p => p.FriendlyName).HasColumnName("friendly_name");
+            builder.Entity<DataProtectionKey>().Property(p => p.Xml).HasColumnName("xml");
         }
 
-        // This maps to the table that stores keys.
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     }
 }

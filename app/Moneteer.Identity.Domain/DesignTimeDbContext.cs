@@ -3,19 +3,19 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Moneteer.Identity.Domain
 {
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<IdentityDbContext>
     {
-        public ApplicationDbContext CreateDbContext(string[] args)
+        public IdentityDbContext CreateDbContext(string[] args)
         {
-            foreach (var bleh in args)
+            foreach (var arg in args)
             {
-                System.Console.WriteLine(bleh);
+                System.Console.WriteLine(arg);
             }
             
-            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            optionsBuilder.UseNpgsql("Server=127.0.0.1;User Id=postgres;Password=admin;Enlist=true;Database=moneteer-identity;");
+            var optionsBuilder = new DbContextOptionsBuilder<IdentityDbContext>();
+            optionsBuilder.UseNpgsql("Server=127.0.0.1;User Id=postgres;Password=admin;Enlist=true;Database=moneteer;");
 
-            return new ApplicationDbContext(optionsBuilder.Options);
+            return new IdentityDbContext(optionsBuilder.Options);
         }
     }
 }
