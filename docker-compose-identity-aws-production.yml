@@ -24,7 +24,7 @@ services:
         awslogs-stream-prefix: "proxy"
 
 # Create the service using the default cluster profile
-# ecs-cli compose -f docker-compose-identity-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-identity-service/18489a5836104311 --container-name proxy --container-port 80 ecs-cli compose -f docker-compose-backend-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-backend-service/e841cb5ea4a3607b --container-name proxy --container-port 80 --launch-type FARGATE
+# ecs-cli compose -f docker-compose-identity-aws-production.yml service up --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:525140287988:targetgroup/ecs-moneteer-identity-service/18489a5836104311 --container-name proxy --container-port 80 --launch-type FARGATE
 
 # Force a new deployment. Used when the service definition doesn't change but you want to update the image
 # aws ecs update-service --cluster moneteer-cluster --service moneteer-identity --force-new-deployment
