@@ -1,5 +1,7 @@
-GRANT CONNECT ON DATABASE moneteer_identity_server TO svc_identity;
-GRANT USAGE ON SCHEMA public TO svc_identity;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO svc_identity;
-
-
+GRANT CONNECT ON DATABASE moneteer TO svc_moneteer;
+GRANT USAGE ON SCHEMA app TO svc_moneteer;
+GRANT USAGE ON SCHEMA data_protection TO svc_moneteer;
+GRANT USAGE ON SCHEMA identity TO svc_moneteer;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA app TO svc_moneteer;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA data_protection TO svc_moneteer;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA identity TO svc_moneteer;
