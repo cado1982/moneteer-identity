@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Moneteer.Identity.Repositories
+namespace Moneteer.Identity.Domain
 {
     public class DataProtectionKeysContext : DbContext, IDataProtectionKeyContext
     {

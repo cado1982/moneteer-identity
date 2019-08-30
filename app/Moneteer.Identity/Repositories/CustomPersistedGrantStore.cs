@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.EntityFramework.Stores;
 using Microsoft.Extensions.Logging;

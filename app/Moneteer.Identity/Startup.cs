@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using IdentityServer4.EntityFramework.Interfaces;
-using IdentityServer4.EntityFramework.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +13,7 @@ using Moneteer.Identity.Domain;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Identity.Helpers;
 using Moneteer.Identity.Repositories;
+using Serilog;
 
 namespace Moneteer.Identity
 {
@@ -47,7 +43,7 @@ namespace Moneteer.Identity
 
             services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(moneteerConnectionString));
             services.AddDbContext<Domain.IdentityDbContext>(options => options.UseNpgsql(moneteerConnectionString));
-            services.AddTransient<PersistedGrantContext>();
+            services.AddDbContext<PersistedGrantContext>(options => options.UseNpgsql(moneteerConnectionString));
             services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedEmail = true)
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<Domain.IdentityDbContext>();
@@ -97,10 +93,7 @@ namespace Moneteer.Identity
             })
                 .AddOperationalStore(options => 
                 {
-                    options.ConfigureDbContext = b => {
-                        b.UseNpgsql(moneteerConnectionString);
-                        //b.EnableSensitiveDataLogging();
-                    };
+                    options.ConfigureDbContext = b => b.UseNpgsql(moneteerConnectionString);
                     options.EnableTokenCleanup = true;
                 })
                 .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
@@ -134,6 +127,7 @@ namespace Moneteer.Identity
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseSerilogRequestLogging();
             app.UseForwardedHeaders();
 
             if (env.IsDevelopment())
