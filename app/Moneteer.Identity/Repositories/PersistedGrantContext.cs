@@ -7,6 +7,9 @@ namespace Moneteer.Identity.Repositories
 {
     public class PersistedGrantContext : DbContext, IPersistedGrantDbContext
     {
+        public PersistedGrantContext(DbContextOptions<PersistedGrantContext> options) 
+            : base(options) { }
+
         public DbSet<PersistedGrant> PersistedGrants { get; set; }
         public DbSet<DeviceFlowCodes> DeviceFlowCodes { get; set; }
 
@@ -21,7 +24,8 @@ namespace Moneteer.Identity.Repositories
 
             builder.Entity<PersistedGrant>(b =>
             {
-                b.ToTable("persisted_grants", "identity");
+                b.ToTable("persisted_grants", "identity")
+                    .HasKey(p => p.Key);
                 b.Property(p => p.ClientId).HasColumnName("client_id");
                 b.Property(p => p.CreationTime).HasColumnName("creation_time");
                 b.Property(p => p.Data).HasColumnName("data");
@@ -33,7 +37,8 @@ namespace Moneteer.Identity.Repositories
 
             builder.Entity<DeviceFlowCodes>(b =>
             {
-                b.ToTable("device_codes", "identity");
+                b.ToTable("device_codes", "identity")
+                    .HasKey(p => p.UserCode);
                 b.Property(p => p.ClientId).HasColumnName("client_id");
                 b.Property(p => p.CreationTime).HasColumnName("creation_time");
                 b.Property(p => p.Data).HasColumnName("data");

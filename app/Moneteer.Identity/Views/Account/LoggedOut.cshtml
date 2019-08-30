@@ -18,4 +18,9 @@
     <div class="m-5 text-center">
         <div><a href='@ConfigurationHelper.LandingUri'>Return to Moneteer</a></div>
     </div>
+
+    @if (Model.SignOutIframeUrl != null)
+    {
+        <iframe width="0" height="0" class="signout" src="@Model.SignOutIframeUrl"></iframe>
+    }
 </div>
