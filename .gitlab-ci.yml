@@ -19,16 +19,16 @@ before_script:
 build:
   stage: build
   script:
-    - docker build --pull -t $APP_TEST_IMAGE:$CI_COMMIT_SHORT_SHA app
-    - docker build --pull -t $PROXY_TEST_IMAGE:$CI_COMMIT_SHORT_SHA nginx
-    - docker push $APP_TEST_IMAGE:$CI_COMMIT_SHORT_SHA
-    - docker push $PROXY_TEST_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker build --pull -t $APP_IMAGE_NAME:$CI_COMMIT_SHORT_SHA app
+    - docker build --pull -t $PROXY_IMAGE_NAME:$CI_COMMIT_SHORT_SHA nginx
+    - docker push $APP_IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+    - docker push $PROXY_IMAGE_NAME:$CI_COMMIT_SHORT_SHA
 
 release:
   stage: release
   script:
-    - docker pull $APP_TEST_IMAGE:$CI_COMMIT_SHORT_SHA
-    - docker pull $PROXY_TEST_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker pull $APP_IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+    - docker pull $PROXY_IMAGE_NAME:$CI_COMMIT_SHORT_SHA
     - docker tag $APP_IMAGE_NAME:$CI_COMMIT_SHORT_SHA $APP_IMAGE_NAME:latest
     - docker tag $PROXY_IMAGE_NAME:$CI_COMMIT_SHORT_SHA $PROXY_IMAGE_NAME:latest
     - docker tag $APP_IMAGE_NAME:$CI_COMMIT_SHORT_SHA $APP_IMAGE_NAME:$CI_COMMIT_REF_NAME
