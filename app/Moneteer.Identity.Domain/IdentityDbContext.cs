@@ -34,6 +34,9 @@ namespace Moneteer.Identity.Domain
                 b.Property(u => u.LockoutEnd).HasColumnName("lockout_end");
                 b.Property(u => u.LockoutEnabled).HasColumnName("lockout_enabled");
                 b.Property(u => u.AccessFailedCount).HasColumnName("access_failed_count");
+                b.Property(e => e.SubscriptionExpiry).HasColumnName("subscription_expiry");
+                b.Property(e => e.TrialExpiry).HasColumnName("trial_expiry");
+                b.Property(e => e.StripeId).HasColumnName("stripe_id");
             });
 
             builder.Entity<IdentityUserToken<Guid>>(b =>
