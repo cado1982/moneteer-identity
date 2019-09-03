@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
+using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -54,6 +55,8 @@ namespace Moneteer.Identity
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<Domain.IdentityDbContext>();
 
+            services.AddTransient<IPersistedGrantStore, CustomPersistedGrantStore>();
+            
             // Data Protection - Provides storage and encryption for anti-forgery tokens
             if (Environment.IsDevelopment())
             {
@@ -97,6 +100,7 @@ namespace Moneteer.Identity
                     options.PublicOrigin = publicOriginSetting;
                 }
             })
+                
                 .AddOperationalStore(options => 
                 {
                     options.ConfigureDbContext = b => b.UseNpgsql(moneteerConnectionString);
@@ -106,6 +110,7 @@ namespace Moneteer.Identity
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddInMemoryApiResources(IdentityConfig.GetApiResources(Configuration))
                 .AddPersistedGrantStore<CustomPersistedGrantStore>()
+                
                 .AddAspNetIdentity<User>();
 
             if (Environment.IsDevelopment()) 

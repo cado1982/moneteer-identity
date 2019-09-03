@@ -45,7 +45,7 @@ namespace Moneteer.Identity
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .SuppressStatusMessages(true)
+                .SuppressStatusMessages(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
                 .UseConfiguration(Configuration)
                 .UseSerilog()
                 .UseStartup<Startup>();
