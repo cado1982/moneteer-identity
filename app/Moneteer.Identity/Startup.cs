@@ -102,7 +102,7 @@ namespace Moneteer.Identity
                 {
                     options.ConfigureDbContext = b => b.UseNpgsql(moneteerConnectionString);
                     options.EnableTokenCleanup = true;
-                    options.TokenCleanupInterval = 10;
+                    options.TokenCleanupInterval = 3600; // 1 hour
                 })
                 .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
