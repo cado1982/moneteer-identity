@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
+using IdentityServer4.EntityFramework.Interfaces;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -50,13 +51,10 @@ namespace Moneteer.Identity
 
             services.AddDbContext<DataProtectionKeysContext>(options => options.UseNpgsql(moneteerConnectionString));
             services.AddDbContext<Domain.IdentityDbContext>(options => options.UseNpgsql(moneteerConnectionString));
-            services.AddDbContext<PersistedGrantContext>(options => options.UseNpgsql(moneteerConnectionString));
             services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedEmail = true)
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<Domain.IdentityDbContext>();
 
-            services.AddTransient<IPersistedGrantStore, CustomPersistedGrantStore>();
-            
             // Data Protection - Provides storage and encryption for anti-forgery tokens
             if (Environment.IsDevelopment())
             {
@@ -100,17 +98,15 @@ namespace Moneteer.Identity
                     options.PublicOrigin = publicOriginSetting;
                 }
             })
-                
-                .AddOperationalStore(options => 
+                .AddOperationalStore<CustomPersistedGrantDbContext>(options => 
                 {
                     options.ConfigureDbContext = b => b.UseNpgsql(moneteerConnectionString);
                     options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = 10;
                 })
                 .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddInMemoryApiResources(IdentityConfig.GetApiResources(Configuration))
-                .AddPersistedGrantStore<CustomPersistedGrantStore>()
-                
                 .AddAspNetIdentity<User>();
 
             if (Environment.IsDevelopment()) 

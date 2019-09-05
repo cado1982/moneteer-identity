@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Moneteer.Identity.Repositories
 {
-    public class PersistedGrantContext : DbContext, IPersistedGrantDbContext
+    public class CustomPersistedGrantDbContext : DbContext, IPersistedGrantDbContext
     {
-        public PersistedGrantContext(DbContextOptions<PersistedGrantContext> options) 
+        public CustomPersistedGrantDbContext(DbContextOptions<CustomPersistedGrantDbContext> options) 
             : base(options) { }
 
         public DbSet<PersistedGrant> PersistedGrants { get; set; }
