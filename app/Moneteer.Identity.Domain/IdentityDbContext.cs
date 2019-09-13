@@ -37,8 +37,6 @@ namespace Moneteer.Identity.Domain
                 b.Property(e => e.SubscriptionExpiry).HasColumnName("subscription_expiry");
                 b.Property(e => e.TrialExpiry).HasColumnName("trial_expiry");
                 b.Property(e => e.StripeId).HasColumnName("stripe_id");
-                b.Property(e => e.SubscriptionStatus).HasColumnName("subscription_status");
-                b.Property(e => e.SubscriptionId).HasColumnName("subscription_id");
             });
 
             builder.Entity<IdentityUserToken<Guid>>(b =>
