@@ -19,8 +19,8 @@ before_script:
 build:
   stage: build
   script:
-    - docker build --pull -t $APP_IMAGE_NAME:$CI_COMMIT_SHORT_SHA app
-    - docker build --pull -t $PROXY_IMAGE_NAME:$CI_COMMIT_SHORT_SHA nginx
+    - docker build --pull -t $APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA app
+    - docker build --pull -t $PROXY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA nginx
     - docker push $APP_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
     - docker push $PROXY_IMAGE_NAME:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
 
