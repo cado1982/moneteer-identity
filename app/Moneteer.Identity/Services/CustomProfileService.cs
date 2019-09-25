@@ -38,13 +38,15 @@ namespace Moneteer.Identity.Services
             var claims = principal.Claims.ToList();
             claims = claims.Where(c => context.RequestedClaimTypes.Contains(c.Type)).ToList();
 
-            _logger.LogDebug($"Adding trialExpiry claim for user {sub} with value {user.TrialExpiry.ToString()}");
-            claims.Add(new Claim(CustomClaimTypes.TrialExpiry, user.TrialExpiry.ToString()));
-
-            if (user.SubscriptionExpiry != null) 
+            var trialExpiryTimestamp = (int)user.TrialExpiry.Subtract(new System.DateTime(1970,1,1)).TotalSeconds;
+            _logger.LogDebug($"Adding trialExpiry claim for user {sub} with value {trialExpiryTimestamp}");
+            claims.Add(new Claim(CustomClaimTypes.TrialExpiry, trialExpiryTimestamp.ToString(), ClaimValueTypes.Integer32));
+            
+            if (user.SubscriptionExpiry.HasValue) 
             {
-                _logger.LogDebug($"Adding subscriptionExpiry claim for user {sub} with value {user.SubscriptionExpiry.ToString()}");
-                claims.Add(new Claim(CustomClaimTypes.SubscriptionExpiry, user.SubscriptionExpiry.ToString()));
+                var subscriptionExpiryTimestamp = (int)user.SubscriptionExpiry.Value.Subtract(new System.DateTime(1970,1,1)).TotalSeconds;
+                _logger.LogDebug($"Adding subscriptionExpiry claim for user {sub} with value {subscriptionExpiryTimestamp}");
+                claims.Add(new Claim(CustomClaimTypes.SubscriptionExpiry, subscriptionExpiryTimestamp.ToString()));
             }
 
             context.IssuedClaims = claims;
