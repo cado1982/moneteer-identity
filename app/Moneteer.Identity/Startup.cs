@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
-using IdentityServer4.EntityFramework.Interfaces;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +14,7 @@ using Moneteer.Identity.Domain;
 using Moneteer.Identity.Domain.Entities;
 using Moneteer.Identity.Helpers;
 using Moneteer.Identity.Repositories;
+using Moneteer.Identity.Services;
 using Serilog;
 
 namespace Moneteer.Identity
@@ -98,6 +97,7 @@ namespace Moneteer.Identity
                     options.PublicOrigin = publicOriginSetting;
                 }
             })
+                .AddAspNetIdentity<User>()
                 .AddOperationalStore<CustomPersistedGrantDbContext>(options => 
                 {
                     options.ConfigureDbContext = b => b.UseNpgsql(moneteerConnectionString);
@@ -107,7 +107,7 @@ namespace Moneteer.Identity
                 .AddInMemoryIdentityResources(IdentityConfig.IdentityResources)
                 .AddInMemoryClients(Configuration.GetSection("IdentityServer:Clients"))
                 .AddInMemoryApiResources(IdentityConfig.GetApiResources(Configuration))
-                .AddAspNetIdentity<User>();
+                .AddProfileService<CustomProfileService>();
 
             if (Environment.IsDevelopment()) 
             {
