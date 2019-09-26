@@ -19,7 +19,11 @@ namespace Moneteer.Identity
             {
                 new ApiResource("moneteer-api", "Moneteer API")
                 {
-                    ApiSecrets = { new Secret(configuration["ApiSecret"].Sha256()) }
+                    //ApiSecrets = { new Secret(configuration["ApiSecret"].Sha256()) },
+                    Scopes = new List<Scope>
+                    {
+                        new Scope("moneteer-api")
+                    }
                 }
             };
         }
