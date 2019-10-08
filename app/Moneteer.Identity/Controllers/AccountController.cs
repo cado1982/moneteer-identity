@@ -250,14 +250,14 @@ namespace Moneteer.Identity.Controllers
                 await _eventService.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
             }
 
-            if (vm.PostLogoutRedirectUri != null)
-            {
-                return Redirect(vm.PostLogoutRedirectUri);
-            }
-            else
-            {
+            // if (vm.PostLogoutRedirectUri != null)
+            // {
+            //     return Redirect(vm.PostLogoutRedirectUri);
+            // }
+            // else
+            // {
                 return View("LoggedOut", vm);
-            }
+            // }
         }
 
         private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginViewModel model)
